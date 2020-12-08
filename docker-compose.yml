@@ -1,0 +1,19 @@
+version: '2.2'
+
+services:
+  mqtt:
+    restart: unless-stopped
+    image: eclipse-mosquitto
+    ports:
+      - "1883:1883"
+
+  cmd:
+    image: mqtt-launcher:latest
+    command: python3 mqtt-launcher.py
+
+  runner:
+    image: mqtt-launcher:latest
+    command: mosquitto_pub -h mqtt -t sys/file -m create
+    depends_on: 
+      - cmd
+
